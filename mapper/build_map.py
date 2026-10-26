@@ -63,6 +63,16 @@ def blur_faces(img, cascade):
     return img
 
 
+def blur_regions(img, regions):
+    """privacy.csv 에 적은 구역(화면 비율 0~1)을 흐리게 한다. 자동으로 못 찾은 얼굴/사람용."""
+    h, w = img.shape[:2]
+    for x0, y0, x1, y1 in regions:
+        xa, ya, xb, yb = int(x0 * w), int(y0 * h), int(x1 * w), int(y1 * h)
+        if xb > xa and yb > ya:
+            img[ya:yb, xa:xb] = cv2.GaussianBlur(img[ya:yb, xa:xb], (0, 0), max(xb - xa, yb - ya) / 6)
+    return img
+
+
 def orb_verify(a, b, matcher, min_inliers):
     (ka, da), (kb, db) = a, b
     if da is None or db is None or len(ka) < 20 or len(kb) < 20:
@@ -139,6 +149,12 @@ def main():
     cascade = None if args.no_face_blur else cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
+    # privacy.csv: video,start,end,x0,y0,x1,y1 → 그 영상의 start~end 초 장면에서 해당 구역을 흐리게
+    privacy = []
+    for r in load_labels(sdir / "privacy.csv"):
+        privacy.append((r["video"].strip(), (float(r["start"]), float(r["end"])),
+                        float(r["x0"]), float(r["y0"]), float(r["x1"]), float(r["y1"])))
+
     if (out / "frames").exists():
         shutil.rmtree(out / "frames")
     (out / "frames").mkdir(parents=True)
@@ -154,6 +170,8 @@ def main():
             web_img = resize_w(frame, WEB_IMG_WIDTH).copy()
             if cascade is not None:
                 web_img = blur_faces(web_img, cascade)
+            web_img = blur_regions(web_img, [r[2:] for r in privacy
+                                             if r[0] == vpath.name and r[1][0] <= t <= r[1][1]])
             cv2.imwrite(str(out / "frames" / f"{nid}.jpg"), web_img, [cv2.IMWRITE_JPEG_QUALITY, 72])
             gray = cv2.cvtColor(resize_w(frame, ORB_WIDTH), cv2.COLOR_BGR2GRAY)
             orbs.append(orb.detectAndCompute(gray, None))
