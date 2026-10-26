@@ -10,6 +10,7 @@
 모든 AI 계산은 PC와 사용자 휴대폰 브라우저 안에서 실행됩니다. 서버, 유료 API, 앱 설치가 필요 없습니다.
 
 - 사이트: https://bandit1397.github.io/indoor-tracking/
+- 연습역 (휴대폰 시험용): https://bandit1397.github.io/indoor-tracking/?station=practice
 
 ```
 mapper/            PC에서 실행하는 지도 만들기 (Python)
