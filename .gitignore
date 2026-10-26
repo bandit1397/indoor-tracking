@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+# 원본 동영상은 용량이 커서 올리지 않는다 (지도 결과 web/data/ 만 올림)
+stations/*/videos/*
+!stations/*/videos/.gitkeep

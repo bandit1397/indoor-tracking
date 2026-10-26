@@ -1,0 +1,8 @@
+﻿# OpenCV 5.x 에서는 얼굴 흐림용 CascadeClassifier 가 빠져서 4.x 사용
+opencv-python<5
+numpy
+onnxruntime
+# 모델 변환(export_model.py)에만 필요. 한 번 변환한 뒤에는 없어도 됨
+onnx
+torch
+torchvision

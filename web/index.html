@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Subway Indoor Navi</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.3/dist/ort.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1 id="title">Subway Indoor Navi</h1>
+    <select id="lang" aria-label="Language">
+      <option value="en">English</option>
+      <option value="ko">한국어</option>
+      <option value="zh">中文</option>
+      <option value="ja">日本語</option>
+    </select>
+  </header>
+
+  <main>
+    <p id="status" class="status"></p>
+
+    <!-- 1. 현재 위치 찾기 -->
+    <section id="locate" hidden>
+      <h2 data-i18n="step1"></h2>
+      <p class="hint" data-i18n="hint"></p>
+      <label class="btn primary">
+        <span data-i18n="takePhoto"></span>
+        <input id="photo" type="file" accept="image/*" capture="environment" hidden>
+      </label>
+      <div id="match" hidden>
+        <div class="pair">
+          <figure><img id="myPhoto" alt=""><figcaption data-i18n="yourPhoto"></figcaption></figure>
+          <figure><img id="matchImg" alt=""><figcaption data-i18n="mapView"></figcaption></figure>
+        </div>
+        <p id="matchMsg"></p>
+        <div class="row">
+          <button id="matchYes" class="btn primary" data-i18n="yes"></button>
+          <button id="matchNo" class="btn" data-i18n="no"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 목적지 선택 -->
+    <section id="dest" hidden>
+      <h2 data-i18n="step2"></h2>
+      <div id="places" class="places"></div>
+    </section>
+
+    <!-- 3. 길 안내 -->
+    <section id="route" hidden>
+      <h2 id="routeTitle"></h2>
+      <p id="routeInfo" class="hint"></p>
+      <img id="stepImg" class="step" alt="">
+      <p id="stepMsg" class="stepmsg"></p>
+      <div class="row">
+        <button id="prev" class="btn" data-i18n="prev"></button>
+        <button id="next" class="btn primary" data-i18n="next"></button>
+      </div>
+      <div class="row">
+        <button id="relocate" class="btn" data-i18n="relocate"></button>
+        <button id="restart" class="btn" data-i18n="restart"></button>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="canvas" width="224" height="224" hidden></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
